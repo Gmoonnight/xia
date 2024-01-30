@@ -1,0 +1,4 @@
+# Ignore all hidden files and folders. What the things included by the hidden folders are ignored too.
+.*
+!.gitignore
+*.bin
