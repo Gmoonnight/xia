@@ -29,7 +29,13 @@ label_begin:
 	cli
 	; 2. Open A20
 	call open_a20
-	; Load GDTR register
+	; 3. Load GDTR register
 	lgdt [gdtr_]
+	; 4. Enable protected mode
+	mov eax, cr0
+	or eax, 1	; enbale PE bit
+	mov cr0, eax
+	; 5. Enter the code segment in protected mode by mixed-size jump
+	jump dword 0x0008, 0x00000000
 	; Enable interrupts
-	sti
+	; sti
