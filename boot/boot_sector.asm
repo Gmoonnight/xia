@@ -3,21 +3,21 @@
 jmp main
 
 main:
+	; Save boot driver number which initialized in dl by BIOS to memory address 0x90000 for later reading data from that device to memory
+	; I use [0x9000, 0x90200) to store some data for later using
+	mov ax, 0x9000
+	mov ds, ax
+	mov [ds:0x0000], dx
 
 	; Read 4 sectors from boot disk to memory address 0x90200 for jump to here later
 	mov ax, 0x9000
 	mov es, ax
 	mov bx, 0x0200	; target memory address = es:bx = 0x9000:0x0200
 	mov ax, 0x0204	; ah = function code indicates reading sectors from driver, al = read how much sectors
-	mov dh, 0x00	; dh = which head(0, 1, ...), dl = which boot driver(BIOS has written driver number to dl) (0x00, 0x01, ..., 0x80, 0x81, ...)
+	mov dh, 0x00	; dh = which head(0, 1, ...), dl = which boot driver(BIOS has written driver number already to dl) (0x00, 0x01, ..., 0x80, 0x81, ...)
 	mov cx, 0x0002	; ch = which cylinder(0, 1, ...), cl = which sector to be read firstly(1, 2, ...)
 
 	int 0x13
-
-	; Save boot driver number to 0x90000 for later using
-	mov ax, 0x9000
-	mov ds, ax
-	mov [ds:0x0000], dx
 
 	jmp 0x9020:0x0000 	; jump to next step
 
