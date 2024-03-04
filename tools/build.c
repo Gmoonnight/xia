@@ -7,6 +7,7 @@ int main() {
 	// Source files
 	FILE *boot_sector = fopen("boot/boot_sector", "r");	
 	FILE *setup = fopen("boot/setup", "r");
+	FILE *head = fopen("boot/head", "r");
 	
 	// Write boot sector to os
 	char bs_buf[512];
@@ -28,6 +29,13 @@ int main() {
 
 	fwrite(s_buf, 1, 512 * 4, os);
 	fclose(setup);
+
+	// Write head to os
+	char h_buf[512 * 240];
+
+	unsigned long h_rc = fread(h_buf, 1, 512 * 240, head);
+	fwrite(h_buf, 1, 512 * 240, os);
+	fclose(head);
 
 	// All things done.
 	fclose(os);
