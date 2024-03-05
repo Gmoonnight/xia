@@ -1,15 +1,15 @@
-boot/boot_sector: tools/print_string.asm boot/boot_sector.asm
+boot/boot_sector: boot/boot_sector.asm tools/print_string.asm 
 	nasm -f bin boot/boot_sector.asm -o boot/boot_sector
 	echo 'Build boot/boot_sector...OK'
 
-boot/setup: tools/print_string.asm boot/setup.asm boot/legacy_a20.asm
+boot/setup: tools/print_string.asm boot/legacy_a20.asm
 	nasm -f bin boot/setup.asm -o boot/setup
 	echo 'Build boot/setup...OK'
 
-kernel/kernel: kernel/kernel.c
-	clang -g -m32 -c -ffreestanding -o kernel/kernel.o kernel/kernel.c
-
-
+boot/system: boot/head.asm kernel/kernel.c
+	nasm -f elf32 boot/head.asm -o boot/head.o
+	clang -c -std=c17 -m32 -ffreestanding kernel/kernel.c -o kernel/kernel.o
+	
 tools/build: tools/build.c
 	clang -std=c17 tools/build.c -o tools/build
 	echo 'Build tools/build...OK'
@@ -31,5 +31,5 @@ disk: os
 	echo 'Success!'
 
 clean: 
-	rm -rf boot/boot_sector boot/setup boot/head tools/build os
+	rm -rf boot/boot_sector boot/setup boot/head.o kernel/kernel.o boot/system tools/build os
 	echo 'Success!'

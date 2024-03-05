@@ -6,19 +6,19 @@ jmp main
 	lba_dap: 
 		db 16						; bytes of DAP, fixed 0x10
 		db 0						; unused, fixed at 0x0
-		dw 264						; number of sectors to be read
+		dw 260						; number of sectors to be read
 		dd 0x30000000 				; segment:offset points to the memory address where the sectors to be store to
 		dq 1						; the number of the first sector to be read(0, 1, 2, 3, ...)
 
 main:
-	; Don't assume the segment registers are set properly. Segment registers will not be changed on method call.
+	; Don't assume the segment registers are set properly.
 	mov ax, 0x07C0
 	mov ds, ax
 	mov ax, 0x7000
 	mov ss, ax
 	mov sp, 0xFFFF					; ss:sp will be used by interrupts mechanism for pushing cs:ip and other stuff to stack
 
-	; Read 264 sectors from boot disk to memory address 0x30000
+	; Read 260 sectors from boot disk to memory address 0x30000
 	mov ah, 0x42 					; function code
 	mov si, lba_dap					; ds:si points to the LBA - DAP
 	int 0x13

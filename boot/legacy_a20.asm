@@ -10,8 +10,6 @@
 		; Save the data of segment registers and memory to stack
 		push ds
 		push es
-		push ss
-		push sp
 
 		xor ax, ax	; reset ax to 0x0000
 		mov ds, ax
@@ -36,8 +34,6 @@
 		pop ax
 		mov byte [es:di], ah
 		mov byte [ds:si], al
-		pop sp
-		pop ss
 		pop es
 		pop ds
 
